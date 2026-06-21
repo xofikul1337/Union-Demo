@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ইউনিয়ন পরিষদ অনলাইন কর আদায় — ডেমো</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">ইউপি</div>
+        <div>
+          <h1>অনলাইন কর আদায়</h1>
+          <p>নমুনা ডেমো সিস্টেম</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="ডেমো নেভিগেশন">
+        <button class="nav-btn active" data-section="home">ডেমো পরিচিতি</button>
+        <button class="nav-btn" data-section="citizen">নাগরিক কর খুঁজুন</button>
+        <button class="nav-btn" data-section="payment">পেমেন্ট ডেমো</button>
+        <button class="nav-btn" data-section="receipt">ডিজিটাল রসিদ</button>
+        <button class="nav-btn" data-section="admin">অফিস রিপোর্ট</button>
+        <button class="nav-btn" data-section="proposal">প্রস্তাবনা</button>
+      </nav>
+      <div class="sidebar-note">
+        <strong>Demo Notice</strong>
+        <span>এখানে কোনো real payment হবে না। সব ডাটা নমুনা।</span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">ইউনিয়ন পরিষদ ডিজিটাল সার্ভিস</p>
+          <h2 id="sectionTitle">ডেমো পরিচিতি</h2>
+        </div>
+        <div class="topbar-actions">
+          <button id="resetDemo" class="ghost-btn">ডেমো রিসেট</button>
+          <button id="presentationBtn" class="primary-btn">Presentation Mode</button>
+        </div>
+      </header>
+
+      <section id="home" class="section active-section">
+        <div class="hero-card">
+          <div class="hero-copy">
+            <span class="pill success">নমুনা প্রেজেন্টেশন ডেমো</span>
+            <h3>ইউনিয়ন পরিষদের Assessment List ও কর আদায় হবে অনলাইনে</h3>
+            <p>নাগরিক ঘরে বসে কর দেখবে, বিকাশ/নগদ পেমেন্ট অপশন দেখবে, রসিদ পাবে। অফিস থেকে দৈনিক আদায় ও বকেয়া রিপোর্ট দেখা যাবে।</p>
+            <div class="hero-actions">
+              <button class="primary-btn" data-go="citizen">ডেমো শুরু করুন</button>
+              <button class="ghost-btn" data-go="admin">অফিস রিপোর্ট দেখুন</button>
+            </div>
+          </div>
+          <div class="phone-preview" aria-label="মোবাইল প্রিভিউ">
+            <div class="phone-top"></div>
+            <div class="mini-card">
+              <span>হোল্ডিং নম্বর</span>
+              <strong>০১-১০১</strong>
+            </div>
+            <div class="mini-card green">
+              <span>মোট পরিশোধযোগ্য</span>
+              <strong>৳ ৭০০</strong>
+            </div>
+            <div class="mini-button">Pay with bKash/Nagad</div>
+            <div class="receipt-chip">রসিদ তৈরি হয়েছে ✓</div>
+          </div>
+        </div>
+
+        <div class="grid four">
+          <div class="info-card">
+            <div class="icon">১</div>
+            <h4>করদাতা খুঁজুন</h4>
+            <p>হোল্ডিং, মোবাইল বা নাম দিয়ে করদাতার তথ্য দেখা যাবে।</p>
+          </div>
+          <div class="info-card">
+            <div class="icon">২</div>
+            <h4>বকেয়া দেখুন</h4>
+            <p>বর্তমান কর, পূর্বের বকেয়া ও মোট পরিশোধযোগ্য টাকা দেখাবে।</p>
+          </div>
+          <div class="info-card">
+            <div class="icon">৩</div>
+            <h4>ডেমো পেমেন্ট</h4>
+            <p>বিকাশ/নগদ পেমেন্ট flow দেখানো হবে—real টাকা কাটবে না।</p>
+          </div>
+          <div class="info-card">
+            <div class="icon">৪</div>
+            <h4>রিপোর্ট</h4>
+            <p>কে দিয়েছে, কে দেয়নি, কোন ওয়ার্ডে কত বকেয়া—সব রিপোর্ট।</p>
+          </div>
+        </div>
+
+        <div class="flow-card">
+          <h4>ডেমো দেখানোর সহজ কথা</h4>
+          <div class="flow-line">
+            <span>নাগরিক</span><b>→</b><span>কর খুঁজবে</span><b>→</b><span>পেমেন্ট করবে</span><b>→</b><span>রসিদ পাবে</span><b>→</b><span>অফিস রিপোর্ট দেখবে</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="citizen" class="section">
+        <div class="split-layout">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>নাগরিক কর খুঁজুন</h3>
+              <p>হোল্ডিং নম্বর, মোবাইল নম্বর বা নাম দিয়ে নমুনা করদাতা খুঁজুন।</p>
+            </div>
+            <div class="search-box">
+              <label for="searchInput">করদাতার তথ্য লিখুন</label>
+              <div class="input-row">
+                <input id="searchInput" type="text" placeholder="যেমন: ০১-১০১ / 01711111111 / রহিম" />
+                <button id="searchBtn" class="primary-btn">খুঁজুন</button>
+              </div>
+              <div class="quick-samples" id="quickSamples"></div>
+            </div>
+            <div id="searchHint" class="empty-state">
+              <strong>ডেমোর জন্য sample holding ব্যবহার করুন</strong>
+              <span>০১-১০১, ০১-১০২, ০২-২০১, ০৩-৩০১, ০৪-৪০১</span>
+            </div>
+            <div id="citizenResult" class="tax-card hidden"></div>
+          </div>
+
+          <div class="panel soft-panel">
+            <h3>নাগরিক যা দেখবে</h3>
+            <div class="simple-list">
+              <div><b>নাম</b><span>করদাতার নাম ও ওয়ার্ড</span></div>
+              <div><b>কর</b><span>বর্তমান কর + বকেয়া + মোট</span></div>
+              <div><b>পেমেন্ট</b><span>বিকাশ/নগদ অপশন</span></div>
+              <div><b>রসিদ</b><span>পেমেন্টের পর ডিজিটাল রসিদ</span></div>
+            </div>
+            <div class="speaker-note">
+              <strong>স্যারদের বলার লাইন:</strong>
+              <p>“নাগরিক নিজের হোল্ডিং নম্বর দিলেই তার করের হিসাব দেখতে পারবে। অফিসে না গিয়েও সে কত টাকা বাকি আছে জানতে পারবে।”</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="payment" class="section">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>পেমেন্ট ডেমো</h3>
+            <p>এখানে real টাকা কাটবে না। বাস্তব সিস্টেমে ইউনিয়ন পরিষদের অনুমোদিত Merchant/সরকারি পেমেন্ট অ্যাকাউন্ট ব্যবহার হবে।</p>
+          </div>
+          <div id="paymentContext" class="payment-context"></div>
+          <div class="payment-methods">
+            <button class="pay-card bkash" data-method="bKash">
+              <span class="pay-logo">b</span>
+              <strong>Pay with bKash</strong>
+              <small>Demo payment simulation</small>
+            </button>
+            <button class="pay-card nagad" data-method="Nagad">
+              <span class="pay-logo">n</span>
+              <strong>Pay with Nagad</strong>
+              <small>Demo payment simulation</small>
+            </button>
+          </div>
+          <div class="warning-box">
+            <strong>গুরুত্বপূর্ণ:</strong>
+            <span>বাস্তব কাজের সময় টাকা কোনো ব্যক্তিগত নাম্বারে যাবে না। ইউনিয়ন পরিষদের অনুমোদিত অ্যাকাউন্ট/পেমেন্ট চ্যানেলে যাবে।</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="receipt" class="section">
+        <div class="split-layout">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>ডিজিটাল রসিদ</h3>
+              <p>পেমেন্ট সফল হলে নাগরিক এই ধরনের রসিদ পাবে।</p>
+            </div>
+            <div id="receiptArea" class="receipt"></div>
+            <div class="receipt-actions">
+              <button id="printReceipt" class="primary-btn">রসিদ প্রিন্ট / PDF</button>
+              <button id="downloadReceipt" class="ghost-btn">রসিদ ডাউনলোড</button>
+            </div>
+          </div>
+          <div class="panel soft-panel">
+            <h3>রসিদে থাকবে</h3>
+            <div class="check-list">
+              <span>✓ রসিদ নম্বর</span>
+              <span>✓ করদাতার নাম</span>
+              <span>✓ হোল্ডিং নম্বর</span>
+              <span>✓ পরিশোধের পরিমাণ</span>
+              <span>✓ পেমেন্ট মাধ্যম</span>
+              <span>✓ তারিখ ও সময়</span>
+            </div>
+            <div class="speaker-note">
+              <strong>স্যারদের বলার লাইন:</strong>
+              <p>“পেমেন্ট হওয়ার সাথে সাথে রসিদ তৈরি হবে। পরে যাচাইয়ের জন্য রসিদ নম্বর থাকবে।”</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="admin" class="section">
+        <div class="panel">
+          <div class="panel-header admin-head">
+            <div>
+              <h3>অফিস রিপোর্ট ড্যাশবোর্ড</h3>
+              <p>চেয়ারম্যান/সচিব/প্রশাসনিক কর্তৃপক্ষের জন্য দৈনিক আদায় ও বকেয়া রিপোর্ট।</p>
+            </div>
+            <button id="exportCsv" class="ghost-btn">CSV Export</button>
+          </div>
+
+          <div class="stats-grid" id="statsGrid"></div>
+
+          <div class="admin-tools">
+            <div>
+              <label for="wardFilter">ওয়ার্ড ফিল্টার</label>
+              <select id="wardFilter">
+                <option value="all">সব ওয়ার্ড</option>
+              </select>
+            </div>
+            <div>
+              <label for="statusFilter">স্ট্যাটাস</label>
+              <select id="statusFilter">
+                <option value="all">সব</option>
+                <option value="paid">পরিশোধিত</option>
+                <option value="due">বকেয়া</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="chart-panel">
+            <h4>ওয়ার্ডভিত্তিক আদায় অবস্থা</h4>
+            <div id="wardBars" class="bar-chart"></div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>হোল্ডিং</th>
+                  <th>নাম</th>
+                  <th>ওয়ার্ড</th>
+                  <th>মোবাইল</th>
+                  <th>মোট কর</th>
+                  <th>স্ট্যাটাস</th>
+                </tr>
+              </thead>
+              <tbody id="taxpayerTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="proposal" class="section">
+        <div class="proposal-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>ডেমো শেষে কী বলবেন</h3>
+              <p>মিটিংয়ে খুব সাধারণ ভাষায় এই কথাগুলো বললেই হবে।</p>
+            </div>
+            <div class="script-box">
+              <p>“স্যার, এটি শুধু একটি নমুনা ডেমো। এখানে আমরা দেখালাম—একজন নাগরিক কীভাবে নিজের কর খুঁজবে, পেমেন্ট অপশন পাবে এবং রসিদ পাবে। অফিস থেকে আবার দেখা যাবে আজ কত টাকা আদায় হয়েছে, কোন ওয়ার্ডে কত টাকা বাকি আছে।”</p>
+              <p>“বাস্তব কাজ শুরু করার আগে ইউনিয়ন পরিষদের আসল Assessment List, অনুমোদিত পেমেন্ট অ্যাকাউন্ট, ডোমেইন/হোস্টিং এবং প্রশাসনিক অনুমোদন লাগবে।”</p>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <h3>বাস্তব কাজের ধাপ</h3>
+              <p>অনুমোদন পেলে এই ধাপে এগোনো যাবে।</p>
+            </div>
+            <ol class="timeline">
+              <li><b>নমুনা ডাটা যাচাই</b><span>২০–৫০ জন করদাতার Assessment List দিয়ে শুরু</span></li>
+              <li><b>ডেমো অনুমোদন</b><span>DC/UNO/UP কর্তৃপক্ষ feedback দেবেন</span></li>
+              <li><b>Full data entry/import</b><span>পুরো ইউনিয়নের করদাতার তালিকা যুক্ত করা</span></li>
+              <li><b>Payment approval</b><span>অনুমোদিত Merchant/সরকারি পেমেন্ট চ্যানেল</span></li>
+              <li><b>Live launch</b><span>সরকারি ডোমেইন/নিরাপদ hosting-এ চালু</span></li>
+            </ol>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="paymentModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal">
+      <button id="closeModal" class="modal-close" aria-label="Close">×</button>
+      <div class="modal-icon">✓</div>
+      <h3>ডেমো পেমেন্ট সফল হয়েছে</h3>
+      <p id="modalText">নমুনা রসিদ তৈরি হয়েছে।</p>
+      <button id="viewReceiptBtn" class="primary-btn">রসিদ দেখুন</button>
+    </div>
+  </div>
+
+  <div id="presentationOverlay" class="presentation hidden">
+    <button id="closePresentation" class="modal-close">×</button>
+    <div class="presentation-card">
+      <p class="eyebrow">Presentation Mode</p>
+      <h3>নাগরিক → কর দেখবে → পেমেন্ট করবে → রসিদ পাবে → অফিস রিপোর্ট দেখবে</h3>
+      <div class="presentation-steps">
+        <button data-go="citizen">১. কর খোঁজা</button>
+        <button data-go="payment">২. পেমেন্ট</button>
+        <button data-go="receipt">৩. রসিদ</button>
+        <button data-go="admin">৪. রিপোর্ট</button>
+      </div>
+      <p>এই চারটি স্ক্রিন দেখালেই নন-টেকনিক্যাল মানুষও পুরো বিষয়টি বুঝবে।</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
