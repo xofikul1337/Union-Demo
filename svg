@@ -1,0 +1,240 @@
+from pathlib import Path
+import zipfile, textwrap, os
+
+# Base directory for icons
+base = Path("/mnt/data/sukunaat_icon_pack")
+base.mkdir(exist_ok=True)
+
+def svg_wrap(body: str, title: str, size: int = 128) -> str:
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 128 128" fill="none">
+<title>{title}</title>
+<rect width="128" height="128" rx="28" fill="#EAF8EC"/>
+{body}
+</svg>'''
+
+icons = {}
+
+# ------------------ TRUST BAR ------------------
+icons["free-delivery-truck.svg"] = svg_wrap('''
+<path d="M25 48H76V84H25V48Z" fill="#166534"/>
+<path d="M76 59H96L108 72V84H76V59Z" fill="#22C55E"/>
+<path d="M83 64H94L101 72H83V64Z" fill="#DFF7E5"/>
+<circle cx="43" cy="88" r="10" fill="#0B3D25"/>
+<circle cx="91" cy="88" r="10" fill="#0B3D25"/>
+''', "Free Delivery Truck")
+
+icons["cash-on-delivery.svg"] = svg_wrap('''
+<rect x="24" y="36" width="80" height="56" rx="10" fill="#166534"/>
+<rect x="33" y="45" width="62" height="38" rx="6" fill="#DCFCE7"/>
+<circle cx="64" cy="64" r="16" fill="#22C55E"/>
+<path d="M64 52V76" stroke="white" stroke-width="5" stroke-linecap="round"/>
+<path d="M56 58C59 54 69 54 72 60C74 68 57 63 56 70C55 77 70 77 74 70" stroke="white" stroke-width="5" stroke-linecap="round"/>
+''', "Cash On Delivery")
+
+icons["secure-order-shield.svg"] = svg_wrap('''
+<path d="M64 18L101 32V59C101 83 86 101 64 112C42 101 27 83 27 59V32L64 18Z" fill="#166534"/>
+<path d="M64 29L91 39V60C91 78 80 91 64 100C48 91 37 78 37 60V39L64 29Z" fill="#22C55E"/>
+<path d="M51 63L60 72L79 52" stroke="white" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+''', "Secure Order Shield")
+
+icons["customer-support-headset.svg"] = svg_wrap('''
+<circle cx="64" cy="64" r="28" fill="#22C55E"/>
+<path d="M33 67V58C33 42 47 29 64 29C81 29 95 42 95 58V67" stroke="#166534" stroke-width="9" stroke-linecap="round"/>
+<rect x="25" y="59" width="18" height="28" rx="8" fill="#166534"/>
+<rect x="85" y="59" width="18" height="28" rx="8" fill="#166534"/>
+<circle cx="64" cy="73" r="7" fill="white"/>
+''', "Customer Support Headset")
+
+icons["nationwide-delivery-map.svg"] = svg_wrap('''
+<path d="M29 33L52 24L78 33L101 25V93L78 102L52 93L29 102V33Z" fill="#166534"/>
+<path d="M64 42C54 42 47 49 47 59C47 73 64 88 64 88C64 88 81 73 81 59C81 49 74 42 64 42Z" fill="#22C55E"/>
+<circle cx="64" cy="59" r="7" fill="white"/>
+''', "Nationwide Delivery Map")
+
+# ------------------ STATS ------------------
+icons["delivered-orders.svg"] = svg_wrap('''
+<rect x="36" y="36" width="56" height="72" rx="12" fill="#22C55E"/>
+<path d="M48 50H80" stroke="white" stroke-width="8" stroke-linecap="round"/>
+<path d="M48 66H80" stroke="white" stroke-width="8" stroke-linecap="round"/>
+<path d="M48 82H65" stroke="white" stroke-width="8" stroke-linecap="round"/>
+''', "Delivered Orders Bag")
+
+icons["happy-customers.svg"] = svg_wrap('''
+<circle cx="64" cy="64" r="32" fill="#22C55E"/>
+<circle cx="54" cy="56" r="6" fill="white"/>
+<circle cx="74" cy="56" r="6" fill="white"/>
+<path d="M52 78C56 82 72 82 76 78" stroke="white" stroke-width="6" stroke-linecap="round"/>
+''', "Happy Customers Smiley")
+
+icons["district-delivery.svg"] = svg_wrap('''
+<path d="M64 32C51 32 40 43 40 56C40 71 57 92 64 100C71 92 88 71 88 56C88 43 77 32 64 32Z" fill="#22C55E"/>
+<circle cx="64" cy="56" r="9" fill="white"/>
+''', "District Delivery Pin")
+
+# ------------------ HERO & PRODUCT ------------------
+icons["natural-badge.svg"] = svg_wrap('''
+<circle cx="64" cy="64" r="40" fill="#166534"/>
+<circle cx="64" cy="64" r="32" fill="#22C55E"/>
+<text x="64" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="900" fill="white">100%</text>
+<text x="64" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="white">Natural</text>
+''', "Natural Badge")
+
+icons["herbal-ingredients.svg"] = svg_wrap('''
+<rect x="32" y="56" width="64" height="36" rx="10" fill="#166534"/>
+<path d="M40 56C52 36 76 36 88 56" stroke="#22C55E" stroke-width="10" stroke-linecap="round"/>
+<circle cx="54" cy="66" r="6" fill="#22C55E"/>
+<circle cx="74" cy="66" r="6" fill="#22C55E"/>
+''', "Herbal Ingredients Bowl")
+
+icons["oil-drop.svg"] = svg_wrap('''
+<path d="M64 26C64 26 92 54 92 78C92 96 79 108 64 108C49 108 36 96 36 78C36 54 64 26 64 26Z" fill="#22C55E"/>
+<circle cx="64" cy="78" r="12" fill="white"/>
+''', "Herbal Oil Drop")
+
+icons["product-bottle.svg"] = svg_wrap('''
+<rect x="48" y="28" width="32" height="72" rx="6" fill="#166534"/>
+<rect x="52" y="24" width="24" height="8" rx="3" fill="#22C55E"/>
+<line x1="48" y1="52" x2="80" y2="52" stroke="#22C55E" stroke-width="6"/>
+''', "Product Bottle")
+
+# ------------------ FEATURES ------------------
+icons["herbal-ingredients-feature.svg"] = svg_wrap('''
+<path d="M40 64H88C86 84 76 98 64 104C52 98 42 84 40 64Z" fill="#22C55E"/>
+<path d="M64 104V80" stroke="#166534" stroke-width="8" stroke-linecap="round"/>
+''', "Herbal Ingredients Hand")
+
+icons["easy-to-use.svg"] = svg_wrap('''
+<path d="M64 26L80 64L64 62L48 64L64 26Z" fill="#22C55E"/>
+<path d="M64 72V102" stroke="#166534" stroke-width="9" stroke-linecap="round"/>
+''', "Easy to Use Thumbs Up")
+
+icons["fast-delivery.svg"] = svg_wrap('''
+<rect x="36" y="60" width="56" height="28" rx="10" fill="#166534"/>
+<path d="M68 60L80 44H96" stroke="#22C55E" stroke-width="8" stroke-linecap="round"/>
+<circle cx="50" cy="92" r="10" fill="#22C55E"/>
+<circle cx="90" cy="92" r="10" fill="#22C55E"/>
+''', "Fast Delivery Bike")
+
+icons["regular-support.svg"] = svg_wrap('''
+<circle cx="64" cy="64" r="30" fill="#22C55E"/>
+<path d="M38 68V60C38 45 50 34 64 34C78 34 90 45 90 60V68" stroke="#166534" stroke-width="8"/>
+<rect x="34" y="60" width="12" height="26" rx="6" fill="#166534"/>
+<rect x="82" y="60" width="12" height="26" rx="6" fill="#166534"/>
+''', "Regular Support Chat")
+
+icons["quality-assured.svg"] = svg_wrap('''
+<circle cx="64" cy="64" r="36" fill="#22C55E"/>
+<path d="M48 66L60 78L84 54" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M64 28V16" stroke="#166534" stroke-width="8" stroke-linecap="round"/>
+''', "Quality Assured Badge")
+
+icons["safe-ingredients.svg"] = svg_wrap('''
+<path d="M64 24L96 36V60C96 82 83 98 64 108C45 98 32 82 32 60V36L64 24Z" fill="#166534"/>
+<path d="M64 40C56 50 56 60 64 72C72 60 72 50 64 40Z" fill="#22C55E"/>
+''', "Safe Ingredients Shield")
+
+icons["natural-care.svg"] = svg_wrap('''
+<path d="M40 82C40 60 60 46 64 46C68 46 88 60 88 82C88 94 76 104 64 104C52 104 40 94 40 82Z" fill="#166534"/>
+<circle cx="64" cy="78" r="10" fill="#22C55E"/>
+''', "Natural Care Leaf")
+
+icons["all-age-safe.svg"] = svg_wrap('''
+<circle cx="48" cy="70" r="14" fill="#22C55E"/>
+<circle cx="80" cy="70" r="14" fill="#22C55E"/>
+<circle cx="64" cy="50" r="14" fill="#22C55E"/>
+''', "All Age Safe Group")
+
+# ------------------ UI & ACTION ------------------
+icons["phone-call.svg"] = svg_wrap('''
+<circle cx="64" cy="64" r="38" fill="#22C55E"/>
+<path d="M50 46L58 54C60 56 60 59 58 62L54 66C60 78 70 86 82 90L86 86C89 84 92 84 95 86L104 94" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+''', "Phone Call")
+
+icons["whatsapp.svg"] = svg_wrap('''
+<circle cx="64" cy="64" r="36" fill="#22C55E"/>
+<path d="M48 96L54 82C70 88 86 78 86 64C86 50 74 38 60 38C48 38 38 48 38 60C38 78 54 88 54 88L48 96Z" fill="white"/>
+<path d="M60 54L64 60L72 56" stroke="#22C55E" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+''', "WhatsApp")
+
+icons["add-to-cart.svg"] = svg_wrap('''
+<path d="M36 40H96L90 66H46L36 40Z" fill="#166534"/>
+<circle cx="50" cy="84" r="10" fill="#22C55E"/>
+<circle cx="84" cy="84" r="10" fill="#22C55E"/>
+<path d="M30 34H44" stroke="#166534" stroke-width="8" stroke-linecap="round"/>
+''', "Add to Cart")
+
+icons["order-now.svg"] = svg_wrap('''
+<rect x="32" y="42" width="64" height="44" rx="12" fill="#166534"/>
+<path d="M52 60H76" stroke="white" stroke-width="8" stroke-linecap="round"/>
+<path d="M64 50V70" stroke="white" stroke-width="8" stroke-linecap="round"/>
+''', "Order Now Plus")
+
+icons["play-video.svg"] = svg_wrap('''
+<circle cx="64" cy="64" r="36" fill="#166534"/>
+<polygon points="56,48 84,64 56,80" fill="white"/>
+''', "Play Button")
+
+icons["star.svg"] = svg_wrap('''
+<path d="M64 26L74 52L102 54L80 70L86 98L64 82L42 98L48 70L26 54L54 52L64 26Z" fill="#22C55E"/>
+''', "Star")
+
+icons["star-half.svg"] = svg_wrap('''
+<path d="M64 26L74 52L102 54L80 70L86 98L64 82V26Z" fill="#22C55E"/>
+<path d="M64 26L54 52L26 54L48 70L42 98L64 82V26Z" fill="#EAF8EC"/>
+''', "Star Half")
+
+icons["star-three.svg"] = svg_wrap('''
+<path d="M64 30L72 50L94 52L76 66L80 88L64 76L48 88L52 66L34 52L56 50L64 30Z" fill="#22C55E"/>
+''', "Three Star")
+
+icons["check-circle.svg"] = svg_wrap('''
+<circle cx="64" cy="64" r="36" fill="#22C55E"/>
+<path d="M46 66L58 78L82 50" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+''', "Check Circle")
+
+icons["close-circle.svg"] = svg_wrap('''
+<circle cx="64" cy="64" r="36" fill="#166534"/>
+<path d="M48 48L80 80" stroke="white" stroke-width="10" stroke-linecap="round"/>
+<path d="M48 80L80 48" stroke="white" stroke-width="10" stroke-linecap="round"/>
+''', "Close Circle")
+
+icons["plus-circle.svg"] = svg_wrap('''
+<circle cx="64" cy="64" r="36" fill="#22C55E"/>
+<path d="M64 46V82" stroke="white" stroke-width="10" stroke-linecap="round"/>
+<path d="M46 64H82" stroke="white" stroke-width="10" stroke-linecap="round"/>
+''', "Plus Circle")
+
+icons["minus-circle.svg"] = svg_wrap('''
+<circle cx="64" cy="64" r="36" fill="#166534"/>
+<path d="M46 64H82" stroke="white" stroke-width="10" stroke-linecap="round"/>
+''', "Minus Circle")
+
+icons["delivery-box.svg"] = svg_wrap('''
+<rect x="36" y="46" width="56" height="48" rx="8" fill="#22C55E"/>
+<path d="M36 62H92" stroke="white" stroke-width="8" stroke-linecap="round"/>
+''', "Delivery Box")
+
+icons["lock-secure.svg"] = svg_wrap('''
+<rect x="40" y="58" width="48" height="44" rx="8" fill="#166534"/>
+<circle cx="64" cy="70" r="10" stroke="white" stroke-width="8" fill="none"/>
+<path d="M64 58V46C64 40 60 36 54 36C48 36 44 40 44 46V58" stroke="#22C55E" stroke-width="8"/>
+''', "Lock Secure")
+
+icons["discount-tag.svg"] = svg_wrap('''
+<path d="M36 72L62 46L92 46L92 76L66 102L36 72Z" fill="#22C55E"/>
+<circle cx="78" cy="54" r="6" fill="white"/>
+<path d="M50 74L82 50" stroke="white" stroke-width="8" stroke-linecap="round"/>
+''', "Discount Tag")
+
+# ---------------------------------------------
+# Write SVG files
+for name, content in icons.items():
+    (base / name).write_text(content, encoding="utf-8")
+
+# Create ZIP
+zip_path = Path("/mnt/data/sukunaat_icon_pack_svg.zip")
+with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+    for f in base.iterdir():
+        z.write(f, arcname=f"sukunaat_icon_pack/{f.name}")
+
+zip_path
