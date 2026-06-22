@@ -1,0 +1,502 @@
+from pathlib import Path
+import zipfile, textwrap, os, json
+
+base = Path("/mnt/data/sukunaat_landing_demo")
+base.mkdir(exist_ok=True)
+
+html = r"""<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sukunaat Herbal Massage Oil - Demo Landing Page</title>
+  <meta name="description" content="ঘাড়, কোমর, হাঁটু ও জয়েন্টের অস্বস্তিতে আরামের জন্য হারবাল ম্যাসাজ অয়েল" />
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="preconnect" href="https://i.pravatar.cc">
+  <link rel="preconnect" href="https://placehold.co">
+  <style>
+    :root{
+      --green:#0f6b3f;
+      --green-2:#19a05d;
+      --deep:#073b25;
+      --mint:#e9fff3;
+      --soft:#f5fff9;
+      --yellow:#f9c84e;
+      --orange:#ff8a3d;
+      --text:#123125;
+      --muted:#5c7669;
+      --white:#ffffff;
+      --shadow:0 18px 50px rgba(7,59,37,.15);
+      --shadow2:0 10px 28px rgba(7,59,37,.10);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: Arial, "Noto Sans Bengali", "Hind Siliguri", sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,#f2fff7 0%,#ffffff 38%,#f6fff9 100%);
+      line-height:1.55;
+    }
+    img{max-width:100%;display:block}
+    a{text-decoration:none;color:inherit}
+    .container{width:min(1120px, calc(100% - 32px));margin-inline:auto}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:9px 14px;border-radius:999px;
+      background:rgba(255,255,255,.72);
+      border:1px solid rgba(15,107,63,.14);
+      box-shadow:0 8px 22px rgba(15,107,63,.08);
+      font-weight:700;color:var(--green);font-size:14px;
+    }
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      background:linear-gradient(135deg,var(--orange),#ff5b28);
+      color:#fff;font-weight:900;border-radius:18px;
+      padding:16px 22px;box-shadow:0 16px 30px rgba(255,91,40,.25);
+      border:0;cursor:pointer;font-size:18px;transition:.2s ease;
+    }
+    .btn:hover{transform:translateY(-2px)}
+    .btn.green{background:linear-gradient(135deg,var(--green-2),var(--green));box-shadow:0 16px 30px rgba(15,107,63,.22)}
+    .section{padding:58px 0}
+    .section-title{text-align:center;margin:0 auto 24px;max-width:780px}
+    .section-title h2{font-size:38px;line-height:1.16;margin:8px 0 10px;color:var(--deep)}
+    .section-title p{color:var(--muted);font-size:17px;margin:0}
+
+    /* Header */
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      background:rgba(245,255,249,.78);
+      backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(15,107,63,.10);
+    }
+    .nav{height:66px;display:flex;align-items:center;justify-content:space-between}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:900;color:var(--deep);font-size:20px}
+    .logo-mark{
+      width:42px;height:42px;border-radius:14px;
+      background:radial-gradient(circle at 30% 25%,#fff 0 10%,#4ee38c 11% 45%,#0f6b3f 46% 100%);
+      box-shadow:0 12px 22px rgba(15,107,63,.2);
+    }
+    .nav-call{font-weight:800;color:var(--green);font-size:15px}
+
+    /* Hero */
+    .hero{
+      position:relative;overflow:hidden;
+      padding:44px 0 34px;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(249,200,78,.25), transparent 28%),
+        radial-gradient(circle at 90% 12%, rgba(25,160,93,.22), transparent 26%),
+        linear-gradient(135deg,#effff5 0%,#ffffff 58%,#e9fff3 100%);
+    }
+    .hero:before{
+      content:"";position:absolute;inset:auto -80px -170px auto;width:340px;height:340px;border-radius:50%;
+      background:rgba(25,160,93,.12);
+    }
+    .hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:36px;align-items:center;position:relative}
+    .hero h1{
+      margin:16px 0 12px;
+      color:var(--deep);
+      font-size:52px;line-height:1.08;letter-spacing:-1px;
+    }
+    .hero h1 span{color:var(--green)}
+    .hero-sub{font-size:22px;font-weight:800;color:#285343;margin:0 0 16px}
+    .check-list{display:grid;gap:10px;margin:18px 0 24px;padding:0;list-style:none}
+    .check-list li{
+      display:flex;align-items:center;gap:10px;
+      font-size:18px;font-weight:700;color:#204739
+    }
+    .check{width:25px;height:25px;border-radius:50%;display:inline-grid;place-items:center;background:#d8ffe8;color:var(--green);font-weight:900;flex:0 0 auto}
+    .hero-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .micro{font-size:13px;color:var(--muted);font-weight:700}
+    .hero-card{
+      position:relative;min-height:520px;border-radius:34px;padding:24px;
+      background:linear-gradient(160deg,#dffff0 0%,#fff 56%,#fff6df 100%);
+      box-shadow:var(--shadow);
+      overflow:hidden;border:1px solid rgba(15,107,63,.12);
+    }
+    .leaf-bg{position:absolute;inset:0;opacity:.18;background:url('https://images.unsplash.com/photo-1515586000433-45406d8e6662?auto=format&fit=crop&w=1200&q=70') center/cover}
+    .bottle-wrap{
+      position:absolute;left:50%;top:50%;transform:translate(-50%,-48%);
+      width:min(360px,78%);height:410px;border-radius:38px;
+      background:linear-gradient(180deg,#114b31 0%,#0b6b42 52%,#08351f 100%);
+      box-shadow:0 32px 70px rgba(7,59,37,.35);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      color:#fff;text-align:center;padding:28px;border:10px solid rgba(255,255,255,.22);
+    }
+    .cap{position:absolute;top:-42px;width:108px;height:56px;border-radius:18px 18px 8px 8px;background:#0c2e20;box-shadow:0 10px 25px rgba(0,0,0,.2)}
+    .label{
+      width:84%;border-radius:28px;background:#fff;color:var(--deep);
+      padding:26px 16px;box-shadow:inset 0 0 0 3px #dfffe9;
+    }
+    .label small{font-weight:900;color:var(--green);letter-spacing:1px}
+    .label h3{font-size:36px;margin:8px 0 0;line-height:1}
+    .label p{font-size:14px;color:#507062;margin:10px 0 0;font-weight:700}
+    .floating{
+      position:absolute;border-radius:20px;background:#fff;padding:12px 14px;
+      box-shadow:var(--shadow2);font-weight:900;color:var(--deep);
+      border:1px solid rgba(15,107,63,.12);
+    }
+    .f1{left:22px;bottom:36px}.f2{right:18px;top:34px}.f3{right:28px;bottom:104px}
+
+    /* Trust */
+    .trust-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:-12px}
+    .trust-card{
+      background:#fff;border-radius:20px;padding:18px 12px;text-align:center;
+      box-shadow:var(--shadow2);border:1px solid rgba(15,107,63,.10);
+      font-weight:900;color:var(--deep)
+    }
+    .trust-card b{display:block;font-size:28px;margin-bottom:3px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+    .stat{background:linear-gradient(135deg,#0f6b3f,#18a15d);color:#fff;border-radius:24px;padding:24px;text-align:center;box-shadow:var(--shadow2)}
+    .stat h3{font-size:36px;margin:0}.stat p{margin:2px 0 0;font-weight:800;opacity:.92}
+
+    /* Review */
+    .review-wrap{background:#073b25;color:#fff;border-radius:34px;padding:34px;box-shadow:var(--shadow);overflow:hidden}
+    .review-wrap .section-title h2,.review-wrap .section-title p{color:#fff}
+    .video-row,.image-row{
+      display:grid;grid-auto-flow:column;grid-auto-columns:300px;gap:16px;overflow-x:auto;padding:4px 4px 16px;scroll-snap-type:x mandatory;
+    }
+    .video-card,.img-review{
+      scroll-snap-align:start;background:#fff;color:var(--deep);border-radius:24px;overflow:hidden;
+      box-shadow:0 14px 35px rgba(0,0,0,.18)
+    }
+    .video-thumb{height:210px;position:relative;background:#ddd;overflow:hidden}
+    .video-thumb img{width:100%;height:100%;object-fit:cover}
+    .play{
+      position:absolute;inset:0;margin:auto;width:62px;height:62px;border-radius:50%;
+      display:grid;place-items:center;background:rgba(255,255,255,.92);color:var(--green);font-size:26px;font-weight:900;
+    }
+    .review-body{padding:14px}
+    .stars{color:#f7b500;letter-spacing:1px;font-size:14px}
+    .review-body p{font-weight:800;margin:7px 0 0;font-size:14px}
+    .img-review img{height:190px;width:100%;object-fit:cover}
+    .customer{display:flex;align-items:center;gap:10px;padding:12px}
+    .avatar{width:38px;height:38px;border-radius:50%;overflow:hidden;background:#e5f7ec}
+
+    /* Cards */
+    .problem-grid,.ingredient-grid,.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+    .card{
+      background:#fff;border-radius:24px;padding:22px;border:1px solid rgba(15,107,63,.10);
+      box-shadow:var(--shadow2)
+    }
+    .icon{
+      width:56px;height:56px;border-radius:18px;display:grid;place-items:center;font-size:28px;
+      background:#e3fff0;margin-bottom:12px
+    }
+    .card h3{margin:0 0 8px;font-size:21px;color:var(--deep)}
+    .card p{margin:0;color:var(--muted);font-weight:600;font-size:15px}
+    .ingredient-card{padding:0;overflow:hidden}
+    .ingredient-card img{width:100%;height:170px;object-fit:cover}
+    .ingredient-card .card-text{padding:18px}
+
+    /* Proof & FAQ */
+    .proof-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:stretch}
+    .proof-main{border-radius:30px;overflow:hidden;box-shadow:var(--shadow);min-height:360px}
+    .proof-main img{height:100%;width:100%;object-fit:cover}
+    .proof-list{display:grid;gap:14px}
+    .proof-item{display:flex;gap:14px;align-items:center;background:#fff;border-radius:22px;padding:16px;box-shadow:var(--shadow2);border:1px solid rgba(15,107,63,.10)}
+    .proof-item b{font-size:28px}
+    details{background:#fff;border-radius:18px;margin:12px 0;padding:16px 18px;box-shadow:var(--shadow2);border:1px solid rgba(15,107,63,.10)}
+    summary{font-weight:900;color:var(--deep);cursor:pointer}
+    details p{color:var(--muted);font-weight:600;margin:10px 0 0}
+
+    /* Form */
+    .order{background:linear-gradient(135deg,#06351f,#0f6b3f);color:#fff;border-radius:34px;padding:34px;box-shadow:var(--shadow)}
+    .order-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;align-items:center}
+    .order h2{font-size:38px;line-height:1.15;margin:0 0 12px}
+    .order p{opacity:.9;font-weight:700}
+    .form{
+      background:#fff;color:var(--deep);border-radius:26px;padding:24px;box-shadow:0 16px 40px rgba(0,0,0,.18)
+    }
+    .field{margin-bottom:13px}
+    label{display:block;font-weight:900;margin-bottom:7px;font-size:14px}
+    input,textarea,select{
+      width:100%;border:1px solid #d7eadf;border-radius:15px;padding:14px 14px;font-size:16px;outline:none;background:#fbfffd;color:#123125
+    }
+    textarea{min-height:90px;resize:vertical}
+    .form-note{font-size:12px;color:var(--muted);font-weight:700;margin-top:10px}
+    footer{padding:28px 0;text-align:center;color:var(--muted);font-weight:700}
+
+    /* Sticky mobile CTA */
+    .sticky-cta{
+      display:none;position:fixed;left:0;right:0;bottom:0;z-index:60;
+      background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
+      border-top:1px solid rgba(15,107,63,.12);padding:10px 14px;
+    }
+    .sticky-cta .btn{width:100%;padding:14px 18px;border-radius:16px;font-size:16px}
+
+    @media (max-width: 900px){
+      .hero-grid,.order-grid,.proof-grid{grid-template-columns:1fr}
+      .hero h1{font-size:42px}
+      .trust-grid{grid-template-columns:repeat(3,1fr)}
+      .problem-grid,.ingredient-grid,.why-grid{grid-template-columns:repeat(2,1fr)}
+      .hero-card{min-height:455px}
+    }
+    @media (max-width: 560px){
+      .container{width:min(100% - 22px,1120px)}
+      .nav{height:60px}.logo{font-size:18px}.nav-call{font-size:13px}
+      .hero{padding:24px 0 20px}
+      .hero h1{font-size:34px;letter-spacing:-.4px}
+      .hero-sub{font-size:18px}
+      .pill{font-size:12px;padding:7px 11px}
+      .check-list li{font-size:15px}
+      .btn{width:100%;font-size:16px;padding:15px 18px}
+      .hero-card{min-height:405px;border-radius:28px;padding:18px}
+      .bottle-wrap{width:75%;height:320px;border-radius:30px}
+      .cap{top:-35px;width:90px;height:48px}
+      .label h3{font-size:30px}
+      .floating{font-size:12px;padding:9px 10px;border-radius:15px}
+      .f1{left:12px;bottom:18px}.f2{right:12px;top:18px}.f3{right:13px;bottom:78px}
+      .section{padding:42px 0}
+      .section-title h2{font-size:28px}
+      .section-title p{font-size:15px}
+      .trust-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+      .trust-card{padding:14px 8px;font-size:13px}
+      .trust-card b{font-size:24px}
+      .stats{grid-template-columns:1fr;gap:10px}
+      .stat{padding:18px;border-radius:20px}.stat h3{font-size:30px}
+      .review-wrap{padding:20px 12px;border-radius:28px;margin-inline:-2px}
+      .video-row,.image-row{grid-auto-columns:258px;gap:12px}
+      .video-thumb{height:180px}
+      .problem-grid,.ingredient-grid,.why-grid{grid-template-columns:1fr;gap:12px}
+      .card{padding:18px;border-radius:20px}
+      .ingredient-card{padding:0}
+      .ingredient-card img{height:155px}
+      .proof-main{min-height:240px;border-radius:24px}
+      .proof-item{padding:14px;border-radius:18px}
+      .order{padding:22px;border-radius:28px}
+      .order h2{font-size:29px}
+      .form{padding:18px;border-radius:22px}
+      footer{padding-bottom:80px}
+      .sticky-cta{display:block}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a href="#" class="logo"><span class="logo-mark"></span> Sukunaat</a>
+      <a href="tel:01700000000" class="nav-call">☎ 01700-000000</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="pill">🌿 হারবাল ম্যাসাজ অয়েল • COD Available</span>
+          <h1>ঘাড়, কোমর, হাঁটু ও জয়েন্টের <span>অস্বস্তিতে আরামের</span> জন্য</h1>
+          <p class="hero-sub">প্রাকৃতিক উপাদানে তৈরি Sukunaat Herbal Massage Oil</p>
+          <ul class="check-list">
+            <li><span class="check">✓</span> সারা বাংলাদেশে ফ্রি হোম ডেলিভারি</li>
+            <li><span class="check">✓</span> ক্যাশ অন ডেলিভারি</li>
+            <li><span class="check">✓</span> পণ্য হাতে পেয়ে মূল্য পরিশোধ</li>
+          </ul>
+          <div class="hero-actions">
+            <a href="#order" class="btn">👉 এখনই অর্ডার করুন</a>
+            <span class="micro">অর্ডার করতে কোনো অগ্রিম পেমেন্ট লাগবে না</span>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="leaf-bg"></div>
+          <div class="bottle-wrap">
+            <div class="cap"></div>
+            <div class="label">
+              <small>HERBAL MASSAGE OIL</small>
+              <h3>Sukunaat</h3>
+              <p>For daily comfort & relaxing massage</p>
+            </div>
+          </div>
+          <div class="floating f1">🚚 Free Delivery</div>
+          <div class="floating f2">⭐ Trusted Choice</div>
+          <div class="floating f3">💵 COD</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:28px">
+      <div class="container">
+        <div class="trust-grid">
+          <div class="trust-card"><b>🚚</b>Free Delivery</div>
+          <div class="trust-card"><b>💵</b>Cash On Delivery</div>
+          <div class="trust-card"><b>🔒</b>Secure Order</div>
+          <div class="trust-card"><b>☎</b>Customer Support</div>
+          <div class="trust-card"><b>🇧🇩</b>Nationwide</div>
+        </div>
+        <div class="stats">
+          <div class="stat"><h3>5000+</h3><p>Delivered Orders</p></div>
+          <div class="stat"><h3>3000+</h3><p>Happy Customers</p></div>
+          <div class="stat"><h3>64</h3><p>District Delivery</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container review-wrap">
+        <div class="section-title">
+          <span class="pill">Real Customer Proof</span>
+          <h2>গ্রাহকদের ভিডিও ও ছবি রিভিউ</h2>
+          <p>আপনার actual review video / screenshot এখানে বসানো হবে। আপাতত demo image ব্যবহার করা হয়েছে।</p>
+        </div>
+
+        <div class="video-row">
+          <div class="video-card">
+            <div class="video-thumb"><img src="https://images.unsplash.com/photo-1607748851687-ba9a10438621?auto=format&fit=crop&w=700&q=70" alt=""><div class="play">▶</div></div>
+            <div class="review-body"><div class="stars">★★★★★</div><p>“ব্যবহার করা সহজ, ম্যাসাজের পর ভালো লাগে।”</p></div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb"><img src="https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=700&q=70" alt=""><div class="play">▶</div></div>
+            <div class="review-body"><div class="stars">★★★★★</div><p>“ডেলিভারি দ্রুত পেয়েছি, প্যাকেজিং ভালো।”</p></div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb"><img src="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=700&q=70" alt=""><div class="play">▶</div></div>
+            <div class="review-body"><div class="stars">★★★★★</div><p>“নিয়মিত ম্যাসাজে স্বস্তি অনুভব করি।”</p></div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb"><img src="https://images.unsplash.com/photo-1573497491208-6b1acb260507?auto=format&fit=crop&w=700&q=70" alt=""><div class="play">▶</div></div>
+            <div class="review-body"><div class="stars">★★★★★</div><p>“COD থাকায় অর্ডার করতে ভরসা পেয়েছি।”</p></div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=700&q=70" alt=""><div class="play">▶</div></div>
+            <div class="review-body"><div class="stars">★★★★★</div><p>“Customer support খুব responsive.”</p></div>
+          </div>
+        </div>
+
+        <div class="image-row">
+          <div class="img-review"><img src="https://images.unsplash.com/photo-1611078489935-0cb964de46d6?auto=format&fit=crop&w=650&q=70" alt=""><div class="customer"><span class="avatar"><img src="https://i.pravatar.cc/80?img=11" alt=""></span><b>Verified Customer</b></div></div>
+          <div class="img-review"><img src="https://images.unsplash.com/photo-1606813902915-23420e6d7c1e?auto=format&fit=crop&w=650&q=70" alt=""><div class="customer"><span class="avatar"><img src="https://i.pravatar.cc/80?img=20" alt=""></span><b>Verified Customer</b></div></div>
+          <div class="img-review"><img src="https://images.unsplash.com/photo-1583316174775-bd6dc0e9f298?auto=format&fit=crop&w=650&q=70" alt=""><div class="customer"><span class="avatar"><img src="https://i.pravatar.cc/80?img=32" alt=""></span><b>Verified Customer</b></div></div>
+          <div class="img-review"><img src="https://images.unsplash.com/photo-1580281657527-47f249e8f4df?auto=format&fit=crop&w=650&q=70" alt=""><div class="customer"><span class="avatar"><img src="https://i.pravatar.cc/80?img=45" alt=""></span><b>Verified Customer</b></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <span class="pill">Daily Comfort</span>
+          <h2>কোন ধরনের অস্বস্তিতে ব্যবহার করা যায়?</h2>
+          <p>এটি কোনো রোগ নিরাময়ের দাবি নয়; দৈনন্দিন ম্যাসাজে আরাম অনুভব করতে সহায়ক।</p>
+        </div>
+        <div class="problem-grid">
+          <div class="card"><div class="icon">🦵</div><h3>হাঁটু অস্বস্তি</h3><p>ম্যাসাজের মাধ্যমে হাঁটুর চারপাশে আরামদায়ক অনুভূতি।</p></div>
+          <div class="card"><div class="icon">🧍</div><h3>কোমর অস্বস্তি</h3><p>দৈনন্দিন কাজের পর কোমরে স্বস্তির জন্য ব্যবহারযোগ্য।</p></div>
+          <div class="card"><div class="icon">💆</div><h3>ঘাড় অস্বস্তি</h3><p>ঘাড় ও কাঁধের অংশে হালকা ম্যাসাজে আরাম অনুভব।</p></div>
+          <div class="card"><div class="icon">🤲</div><h3>জয়েন্ট অস্বস্তি</h3><p>নিয়মিত ম্যাসাজে চলাফেরায় স্বস্তি পেতে সহায়ক।</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="background:var(--soft)">
+      <div class="container">
+        <div class="section-title">
+          <span class="pill">What’s Inside?</span>
+          <h2>হারবাল উপাদান</h2>
+          <p>Actual ingredient list অনুযায়ী পরে নাম/ছবি update করতে হবে।</p>
+        </div>
+        <div class="ingredient-grid">
+          <div class="card ingredient-card"><img src="https://images.unsplash.com/photo-1599909366518-22b92f1a5f6f?auto=format&fit=crop&w=700&q=70" alt=""><div class="card-text"><h3>কালোজিরা</h3><p>হারবাল কেয়ার পণ্যে পরিচিত উপাদান।</p></div></div>
+          <div class="card ingredient-card"><img src="https://images.unsplash.com/photo-1621083950627-02db2fc37e16?auto=format&fit=crop&w=700&q=70" alt=""><div class="card-text"><h3>মেনথল</h3><p>শীতল অনুভূতি দিতে সহায়ক।</p></div></div>
+          <div class="card ingredient-card"><img src="https://images.unsplash.com/photo-1515586000433-45406d8e6662?auto=format&fit=crop&w=700&q=70" alt=""><div class="card-text"><h3>হারবাল এক্সট্রাক্ট</h3><p>প্রাকৃতিক vibe ও ম্যাসাজ comfort-এর জন্য।</p></div></div>
+          <div class="card ingredient-card"><img src="https://images.unsplash.com/photo-1471193945509-9ad0617afabf?auto=format&fit=crop&w=700&q=70" alt=""><div class="card-text"><h3>Natural Oil Base</h3><p>ত্বকে সহজে ম্যাসাজ করার মতো texture।</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <span class="pill">Why Choose</span>
+          <h2>কেন Sukunaat?</h2>
+        </div>
+        <div class="why-grid">
+          <div class="card"><div class="icon">🌿</div><h3>হারবাল উপাদান</h3><p>প্রাকৃতিক উপাদানের উপর focus করা হয়েছে।</p></div>
+          <div class="card"><div class="icon">👌</div><h3>সহজ ব্যবহার</h3><p>প্রয়োজনমতো নিয়ে হালকা করে ম্যাসাজ করুন।</p></div>
+          <div class="card"><div class="icon">🚚</div><h3>সারা দেশে ডেলিভারি</h3><p>বাংলাদেশের ৬৪ জেলায় ডেলিভারি সুবিধা।</p></div>
+          <div class="card"><div class="icon">☎</div><h3>Customer Support</h3><p>অর্ডার ও ব্যবহার নিয়ে নিয়মিত support।</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="background:var(--mint)">
+      <div class="container proof-grid">
+        <div class="proof-main">
+          <img src="https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=1000&q=70" alt="Delivery Proof Demo">
+        </div>
+        <div>
+          <div class="section-title" style="text-align:left;margin-bottom:16px">
+            <span class="pill">Delivery Proof</span>
+            <h2>Real Proof দিলে Trust অনেক বাড়ে</h2>
+            <p>এখানে courier receipt, parcel image, facebook comment screenshot বসাও।</p>
+          </div>
+          <div class="proof-list">
+            <div class="proof-item"><b>📦</b><div><strong>Parcel Ready</strong><br><span>Daily order packaging photo</span></div></div>
+            <div class="proof-item"><b>🧾</b><div><strong>Courier Receipt</strong><br><span>Actual courier slip proof</span></div></div>
+            <div class="proof-item"><b>💬</b><div><strong>Facebook Comments</strong><br><span>Real customer conversation screenshot</span></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <span class="pill">FAQ</span>
+          <h2>সাধারণ প্রশ্নের উত্তর</h2>
+        </div>
+        <details open><summary>কিভাবে ব্যবহার করবো?</summary><p>পরিমাণমতো তেল নিয়ে প্রয়োজনীয় স্থানে ৫-১০ মিনিট হালকা ম্যাসাজ করুন।</p></details>
+        <details><summary>কতদিন ব্যবহার করতে হবে?</summary><p>ব্যক্তিভেদে অনুভূতি আলাদা হতে পারে। নিয়মিত ব্যবহার করলে আরাম অনুভব করতে সহায়ক হতে পারে।</p></details>
+        <details><summary>ডেলিভারি কতদিনে পাবো?</summary><p>সাধারণত ঢাকায় ১-২ দিন এবং ঢাকার বাইরে ২-৪ দিনের মধ্যে।</p></details>
+        <details><summary>COD আছে?</summary><p>হ্যাঁ, পণ্য হাতে পেয়ে মূল্য পরিশোধ করতে পারবেন।</p></details>
+        <details><summary>ফেরত দেওয়া যাবে?</summary><p>পণ্য গ্রহণের সময় কোনো সমস্যা থাকলে support number-এ যোগাযোগ করুন।</p></details>
+      </div>
+    </section>
+
+    <section class="section" id="order">
+      <div class="container order">
+        <div class="order-grid">
+          <div>
+            <span class="pill">Order Now</span>
+            <h2>অর্ডার করতে নিচের ফর্মটি পূরণ করুন</h2>
+            <p>কোনো অগ্রিম পেমেন্ট নয়। আমাদের প্রতিনিধি আপনার সাথে ফোনে নিশ্চিত করবে।</p>
+            <ul class="check-list">
+              <li><span class="check">✓</span> Free Delivery</li>
+              <li><span class="check">✓</span> Cash On Delivery</li>
+              <li><span class="check">✓</span> Secure Order</li>
+            </ul>
+          </div>
+          <form class="form" onsubmit="event.preventDefault(); alert('Demo order submitted! Backend পরে add হবে.');">
+            <div class="field"><label>আপনার নাম</label><input type="text" placeholder="নাম লিখুন" required></div>
+            <div class="field"><label>মোবাইল নাম্বার</label><input type="tel" placeholder="01XXXXXXXXX" required></div>
+            <div class="field"><label>জেলা</label><select required><option value="">জেলা নির্বাচন করুন</option><option>ঢাকা</option><option>চট্টগ্রাম</option><option>কুষ্টিয়া</option><option>রাজশাহী</option><option>খুলনা</option><option>সিলেট</option><option>বরিশাল</option><option>রংপুর</option></select></div>
+            <div class="field"><label>সম্পূর্ণ ঠিকানা</label><textarea placeholder="বাসা/গ্রাম, থানা, জেলা" required></textarea></div>
+            <button class="btn green" type="submit">✅ অর্ডার কনফার্ম করুন</button>
+            <p class="form-note">Demo form. Supabase + Meta CAPI integration Phase 2-তে connect করা হবে।</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      © 2026 Sukunaat. All rights reserved. | Demo Landing Page
+    </div>
+  </footer>
+
+  <div class="sticky-cta">
+    <a href="#order" class="btn">👉 এখনই অর্ডার করুন</a>
+  </div>
+</body>
+</html>
+"""
+
+(base / "index.html").write_text(html, encoding="utf-8")
+
+zip_path = "/mnt/data/sukunaat_landing_demo.zip"
+with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+    z.write(base / "index.html", "index.html")
+
+print(zip_path)
