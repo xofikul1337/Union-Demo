@@ -1,10 +1,4 @@
-from pathlib import Path
-import zipfile, textwrap, os, json
-
-base = Path("/mnt/data/sukunaat_landing_demo")
-base.mkdir(exist_ok=True)
-
-html = r"""<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
@@ -491,12 +485,3 @@ html = r"""<!DOCTYPE html>
   </div>
 </body>
 </html>
-"""
-
-(base / "index.html").write_text(html, encoding="utf-8")
-
-zip_path = "/mnt/data/sukunaat_landing_demo.zip"
-with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
-    z.write(base / "index.html", "index.html")
-
-print(zip_path)
