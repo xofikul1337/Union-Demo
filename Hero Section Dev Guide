@@ -1,0 +1,63 @@
+1. লে-আউট (Stripped HTML structure)
+<section class="hero">
+  <div class="hero-grid">
+
+    <!-- LEFT : Copy -->
+    <div class="hero-copy">
+      <h1>ঘাড়, কোমর, হাঁটু ও জয়েন্টের অস্বস্তিতে<br> <span class="accent">আরামের জন্য হারবাল ম্যাসাজ অয়েল</span></h1>
+
+      <ul class="hero-bullets">
+        <li>সারা বাংলাদেশে ফ্রি হোম ডেলিভারি</li>
+        <li>ক্যাশ অন ডেলিভারি</li>
+        <li>পণ্য হাতে পেয়ে মূল্য পরিশোধ</li>
+      </ul>
+
+      <a href="#order" class="btn-primary">👉 এখনই অর্ডার করুন</a>
+    </div>
+
+    <!-- RIGHT : Product Mock-up -->
+    <figure class="hero-product">
+      <img src="/img/product@1x.webp"
+           srcset="/img/product@1x.webp 1x, /img/product@2x.webp 2x"
+           alt="Sukunaat Pain Quit Oil" width="520" height="640" loading="eager">
+
+      <img class="hero-badge"
+           src="/icons/natural-badge.svg"
+           width="96" height="96" alt="১০০ % হারবাল">
+    </figure>
+
+  </div>
+</section>
+2. CSS (কী লিখবে)
+.hero{padding:60px 0 40px;background:linear-gradient(#f6fff4,#ecfce9);}
+.hero-grid{display:flex;flex-direction:column;gap:40px;max-width:1150px;margin:auto;padding:0 20px;}
+@media(min-width:768px){.hero-grid{flex-direction:row;align-items:center;}}
+.hero-copy{flex:1.1}
+.hero-product{flex:.9;position:relative;text-align:center}
+.hero-product img{max-width:100%;height:auto}
+.hero-badge{position:absolute;right:-18px;top:18px}
+
+h1{font-size:clamp(28px,5vw,54px);line-height:1.15;font-weight:800;color:#0b3d25}
+.accent{color:#166534}
+.hero-bullets{list-style:none;margin:22px 0 32px;padding:0}
+.hero-bullets li{position:relative;padding-left:28px;font-weight:700;margin-bottom:12px}
+.hero-bullets li::before{content:"✔";position:absolute;left:0;top:0;color:#22C55E;font-weight:900}
+.btn-primary{display:inline-block;padding:14px 32px;border-radius:999px;background:linear-gradient(135deg,#166534,#22C55E);color:#fff;font-weight:900;text-decoration:none;box-shadow:0 12px 30px rgba(22,101,52,.25)}
+3. কী অ্যাসেট দরকার (তুমি ডেভেলপারকে দেবে)
+ফাইল	বিবরণ	নোট
+product@1x.webp	বোতল + বক্স cut-out, transparent BG, ~520 px long-edge	WebP; ⬇︎ ~100 kB
+product@2x.webp	একই cut-out, 2× (≈1040 px)	রেটিনা ডিসপ্লে
+natural-badge.svg	১০০ % হারবাল গোল ব্যাজ	আগের আইকন-প্যাক থেকে
+(optional) leaf-bg.svg	হালকা, 20-40 kB blur/leaf ডেকোর	চাইলে absolute দিয়ে place করবে
+
+✔ শুধু এই দুটো (WebP + SVG) দিলেই hero পুরো রেন্ডার হবে—আর কোনও raster merge করার দরকার নেই।
+
+4. টাস্ক-লিস্ট (ডেভেলপারের জন্য)
+Cut-out PNG/WebP-গুলো img/ ফোল্ডারে রাখো (1x + 2x)।
+উপরের HTML structure পেস্ট করে Tailwind/প্লেইন CSS মিলিয়ে layout বসাও।
+Mobile-first column; min-width: 768px-এ row.
+loading="eager" শুধু এই product-ইমেজে, hero-র বাইরে সব ইমেজ lazy.
+হেডলাইন ও bullets অবশ্যই text-node—কোনোভাবে ইমেজে নয়।
+যদি badge আরেকটু animate করতে চাও—@keyframes float (translateY ±4px).
+
+এই ব্রিফটাই dev-কে forward করলেই সে ঠিক বুঝে যাবে কিভাবে সেই স্ক্রিনশটের মতো hero recreate করতে হবে।
